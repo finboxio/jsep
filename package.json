@@ -1,13 +1,13 @@
 {
-	"name": "jsep",
+	"name": "@lr/jsep",
 	"version": "0.4.0",
 	"description": "a tiny JavaScript expression parser",
-	"author": "Stephen Oney <swloney@gmail.com> (http://from.so/)",
+	"author": "Finbox Inc <dev@finbox.com> (https://finbox.com/)",
 	"homepage": "http://jsep.from.so/",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/soney/jsep.git"
+		"url": "https://github.com/finboxio/jsep.git"
 	},
 	"main": "build/jsep.js",
 	"typings": "typings/tsd.d.ts",

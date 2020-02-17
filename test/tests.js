@@ -265,4 +265,20 @@ QUnit.test('Root Member Expressions', function(assert) {
 	}, assert);
 });
 
+QUnit.test('Member Expressions', function(assert) {
+	test_parser("xyz.1", {
+		type: 'MemberExpression',
+		computed: false,
+		object: {
+			type: 'Identifier',
+			name: 'xyz'
+		},
+		property: {
+			type: 'Literal',
+			value: 1,
+			raw: '1'
+		}
+	}, assert);
+});
+
 }());

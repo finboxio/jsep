@@ -391,18 +391,18 @@
 				// e.g.: `foo`, `_value`, `$x1`
 				// Also, this function checks if that identifier is a literal:
 				// (e.g. `true`, `false`, `null`) or `this`
-				gobbleIdentifier = function() {
+				gobbleIdentifier = function(is_property) {
 					var ch = exprICode(index), start = index, identifier;
 
-					if(isIdentifierStart(ch)) {
+					if((is_property && isIdentifierPart(ch)) || isIdentifierStart(ch)) {
 						index++;
-					} else if (ch === PERIOD_CODE) {
+					} else if (!is_property && ch === PERIOD_CODE) {
 						if (exprICode(index + 1) === OBRACK_CODE) index++;
 						return {
 							type: IDENTIFIER,
 							name: '.'
 						};
-					} else {
+					} else if (!is_property) {
 						throwError('Unexpected ' + exprI(index), index);
 					}
 
@@ -416,7 +416,13 @@
 					}
 					identifier = expr.slice(start, index);
 
-					if(literals.hasOwnProperty(identifier)) {
+					if(parseInt(identifier) == identifier) {
+						return {
+							type: LITERAL,
+							value: parseInt(identifier),
+							raw: identifier
+						};
+					} else if(literals.hasOwnProperty(identifier)) {
 						return {
 							type: LITERAL,
 							value: literals[identifier],
@@ -500,7 +506,7 @@
 								type: MEMBER_EXP,
 								computed: false,
 								object: node,
-								property: gobbleIdentifier()
+								property: gobbleIdentifier(node.name !== '.')
 							};
 						} else if(ch_i === OBRACK_CODE) {
 							node = {
