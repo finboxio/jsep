@@ -261,7 +261,9 @@
 					gobbleSpaces();
 					ch = exprICode(index);
 
-					if(isDecimalDigit(ch) || ch === PERIOD_CODE) {
+					if (ch === PERIOD_CODE && (exprICode(index + 1) === OBRACK_CODE || isIdentifierStart(exprICode(index + 1)))) {
+						return gobbleVariable();
+					} else if(isDecimalDigit(ch) || ch === PERIOD_CODE) {
 						// Char code 46 is a dot `.` which can start off a numeric literal
 						return gobbleNumericLiteral();
 					} else if(ch === SQUOTE_CODE || ch === DQUOTE_CODE) {
@@ -394,6 +396,12 @@
 
 					if(isIdentifierStart(ch)) {
 						index++;
+					} else if (ch === PERIOD_CODE) {
+						if (exprICode(index + 1) === OBRACK_CODE) index++;
+						return {
+							type: IDENTIFIER,
+							name: '.'
+						};
 					} else {
 						throwError('Unexpected ' + exprI(index), index);
 					}

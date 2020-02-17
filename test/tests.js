@@ -30,7 +30,7 @@ var filter_props = function(larger, smaller) {
 	var prop_val;
 	for(var prop_name in smaller) {
 		prop_val  = smaller[prop_name];
-		if(typeof prop_val === 'string' || typeof prop_val === 'number') {
+		if(typeof prop_val === 'string' || typeof prop_val === 'number' || typeof prop_val === 'boolean') {
 			rv[prop_name] = larger[prop_name];
 		} else {
 			rv[prop_name] = filter_props(larger[prop_name], prop_val);
@@ -234,6 +234,35 @@ QUnit.test('Ternary', function(assert) {
     assert.equal(val.type, 'ConditionalExpression');
 	val = jsep('a||b ? c : d');
     assert.equal(val.type, 'ConditionalExpression');
+});
+
+QUnit.test('Root Member Expressions', function(assert) {
+	test_parser(".['xyz']", {
+		type: 'MemberExpression',
+		computed: true,
+		object: {
+			type: 'Identifier',
+			name: '.'
+		},
+		property: {
+			type: 'Literal',
+			value: 'xyz',
+			raw: "'xyz'"
+		}
+	}, assert);
+
+	test_parser(".xyz", {
+		type: 'MemberExpression',
+		computed: false,
+		object: {
+			type: 'Identifier',
+			name: '.'
+		},
+		property: {
+			type: 'Identifier',
+			name: 'xyz'
+		}
+	}, assert);
 });
 
 }());
